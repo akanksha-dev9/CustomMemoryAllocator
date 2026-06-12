@@ -1,4 +1,5 @@
 #include "../include/MemoryPool.h"
+#include "../include/LeakDetector.h"
 #include <cstring>
 #include <cassert>
 #include <iostream>
@@ -12,28 +13,33 @@ void testMemoryPool(){
 
     void* ptr1=pool.allocate(256);
     assert(ptr1!=nullptr);
+    TRACK_ALLOC(ptr1, 256);
     std::cout<<"Allocated 256 bytes."<<std::endl;
 
     pool.printMemoryPool();
 
     void* ptr2=pool.allocate(128);
     assert(ptr2!=nullptr);
+    TRACK_ALLOC(ptr2, 128);
     std::cout<<"Allocated 128 bytes."<<std::endl;
 
     pool.printMemoryPool();
 
     pool.deallocate(ptr1);
+    TRACK_DEALLOC(ptr1);
     std::cout<<"Deallocated 256 bytes."<<std::endl;
 
     pool.printMemoryPool();
 
     void* ptr3=pool.allocate(64);
-    assert(ptr3!=nullptr);  
+    assert(ptr3!=nullptr);
+    TRACK_ALLOC(ptr3, 64);
     std::cout<<"Allocated 64 bytes."<<std::endl;
 
     pool.printMemoryPool();
     std::cout<<"Used Memory: "<<pool.usedMemory()<<std::endl;
 
+    REPORT_LEAKS();
 }
 
 int main(){
