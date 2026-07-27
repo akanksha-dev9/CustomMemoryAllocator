@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstddef>
 #include <vector>
+#include <new>
+#include <stdexcept>
 
 struct BlockHeader{
     size_t size;
@@ -15,9 +17,16 @@ private:
     size_t pool_size;
     BlockHeader* head;
     void coalesce();
+    bool isValidBlock(BlockHeader* block) const;
 public:
-    MemoryPool(size_t size);
+    explicit MemoryPool(size_t size);
+
     ~MemoryPool();
+    MemoryPool(const MemoryPool&) = delete; //copy constructor deleted
+    MemoryPool& operator=(const MemoryPool&) = delete;  //copy assignment operator deleted
+    MemoryPool(MemoryPool&& other) noexcept;  //move constructor
+    MemoryPool& operator=(MemoryPool&& other) noexcept; //move assignment operator
+
     void* allocate(size_t size);
     void deallocate(void* ptr);
     void printMemoryPool() const;

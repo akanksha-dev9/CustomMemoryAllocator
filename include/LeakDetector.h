@@ -10,9 +10,8 @@ private:
         const char* file;
         int line;
     };
-public:
     std::vector<LeakInfo> leaks;
-
+public:
     void trackAlloc(void* address, size_t size, const char* file, int line);
     void trackDealloc(void* address);
     void reportLeaks() const;
